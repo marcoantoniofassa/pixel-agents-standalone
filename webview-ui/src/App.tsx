@@ -14,6 +14,8 @@ import { useEditorKeyboard } from './hooks/useEditorKeyboard.js'
 import { ZoomControls } from './components/ZoomControls.js'
 import { BottomToolbar } from './components/BottomToolbar.js'
 import { DebugView } from './components/DebugView.js'
+import { SkillsCatalog } from './components/SkillsCatalog.js'
+import { AgendaPanel } from './components/AgendaPanel.js'
 
 // Game state lives outside React — updated imperatively by message handlers
 const officeStateRef = { current: null as OfficeState | null }
@@ -124,8 +126,12 @@ function App() {
   const { agents, selectedAgent, agentTools, agentStatuses, subagentTools, subagentCharacters, layoutReady, loadedAssets, workspaceFolders } = useExtensionMessages(getOfficeState, editor.setLastSavedLayout, isEditDirty)
 
   const [isDebugMode, setIsDebugMode] = useState(false)
+  const [isCatalogOpen, setIsCatalogOpen] = useState(false)
+  const [isAgendaOpen, setIsAgendaOpen] = useState(false)
 
   const handleToggleDebugMode = useCallback(() => setIsDebugMode((prev) => !prev), [])
+  const handleToggleCatalog = useCallback(() => setIsCatalogOpen((prev) => !prev), [])
+  const handleToggleAgenda = useCallback(() => setIsAgendaOpen((prev) => !prev), [])
 
   const handleSelectAgent = useCallback((id: number) => {
     vscode.postMessage({ type: 'focusAgent', id })
@@ -229,6 +235,10 @@ function App() {
         onToggleEditMode={editor.handleToggleEditMode}
         isDebugMode={isDebugMode}
         onToggleDebugMode={handleToggleDebugMode}
+        isCatalogOpen={isCatalogOpen}
+        onToggleCatalog={handleToggleCatalog}
+        isAgendaOpen={isAgendaOpen}
+        onToggleAgenda={handleToggleAgenda}
         workspaceFolders={workspaceFolders}
       />
 
@@ -295,6 +305,18 @@ function App() {
         panRef={editor.panRef}
         onCloseAgent={handleCloseAgent}
       />
+
+      {isCatalogOpen && (
+        <SkillsCatalog
+          onClose={handleToggleCatalog}
+        />
+      )}
+
+      {isAgendaOpen && (
+        <AgendaPanel
+          onClose={handleToggleAgenda}
+        />
+      )}
 
       {isDebugMode && (
         <DebugView

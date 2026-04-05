@@ -80,6 +80,22 @@ const app = express();
 // Serve production build
 app.use(express.static(join(__dirname, "public")));
 
+// API: registry.json for agenda panel
+const REGISTRY_PATH = join(homedir(), "Documents", "assistant-sexta-feira", "crons", "registry.json");
+app.get("/api/registry", (_req, res) => {
+  try {
+    if (existsSync(REGISTRY_PATH)) {
+      const content = readFileSync(REGISTRY_PATH, "utf-8");
+      res.setHeader("Content-Type", "application/json");
+      res.send(content);
+    } else {
+      res.json({ active: [], recurring: [], completed: [] });
+    }
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+
 const server = createServer(app);
 
 // WebSocket

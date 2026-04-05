@@ -9,6 +9,10 @@ interface BottomToolbarProps {
   onToggleEditMode: () => void
   isDebugMode: boolean
   onToggleDebugMode: () => void
+  isCatalogOpen: boolean
+  onToggleCatalog: () => void
+  isAgendaOpen: boolean
+  onToggleAgenda: () => void
   workspaceFolders: WorkspaceFolder[]
 }
 
@@ -50,6 +54,10 @@ export function BottomToolbar({
   onToggleEditMode,
   isDebugMode,
   onToggleDebugMode,
+  isCatalogOpen,
+  onToggleCatalog,
+  isAgendaOpen,
+  onToggleAgenda,
   workspaceFolders,
 }: BottomToolbarProps) {
   const [hovered, setHovered] = useState<string | null>(null)
@@ -161,6 +169,38 @@ export function BottomToolbar({
         title="Edit office layout"
       >
         Layout
+      </button>
+      <button
+        onClick={onToggleAgenda}
+        onMouseEnter={() => setHovered('agenda')}
+        onMouseLeave={() => setHovered(null)}
+        style={
+          isAgendaOpen
+            ? { ...btnActive, background: 'var(--pixel-active-bg)', border: '2px solid #f59e0b' }
+            : {
+                ...btnBase,
+                background: hovered === 'agenda' ? 'var(--pixel-btn-hover-bg)' : btnBase.background,
+              }
+        }
+        title="Scheduled jobs & history"
+      >
+        Agenda
+      </button>
+      <button
+        onClick={onToggleCatalog}
+        onMouseEnter={() => setHovered('catalog')}
+        onMouseLeave={() => setHovered(null)}
+        style={
+          isCatalogOpen
+            ? { ...btnActive, background: 'var(--pixel-active-bg)', border: '2px solid #a855f7' }
+            : {
+                ...btnBase,
+                background: hovered === 'catalog' ? 'var(--pixel-btn-hover-bg)' : btnBase.background,
+              }
+        }
+        title="Skills & Agents Arsenal"
+      >
+        Arsenal
       </button>
       <div style={{ position: 'relative' }}>
         <button
